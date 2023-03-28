@@ -1,3 +1,5 @@
+// 　droppable1のカイリューなどをdroppable2にドラックアンドドロップすると一瞬だけUIが崩れるのですが原因は何だと思いますか？
+// また解決方法もあれば教えてください
 import React, { useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 
@@ -55,13 +57,14 @@ const LeftParty = () => {
     setParty(newParty);
     if (destination.droppableId === 'droppable2') {
       const droppedPokemon = party.find((pokemon, index) => index === source.index);
-      setSelectPokemon(droppedPokemon || null);
+      setTimeout(() => {
+        setSelectPokemon(droppedPokemon || null);
+      }, 0);
     }
   };
 
   return (
-    <div className=''>
-    <div>
+    <div className='w-1/2'>
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <div className='flex justify-around'>
         <Droppable droppableId='droppable'>
@@ -107,7 +110,6 @@ const LeftParty = () => {
        
       </DragDropContext>
     </div>
-  </div>
    
   )
 }

@@ -59,8 +59,7 @@ const RightParty = () => {
   };
 
   return (
-    <div className=''>
-      <div>
+    <div className='w-1/2'>
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <div className='flex justify-around'>
           
@@ -105,7 +104,6 @@ const RightParty = () => {
          
         </DragDropContext>
       </div>
-    </div>
   )
 };
 
