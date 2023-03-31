@@ -1,6 +1,4 @@
-// 　droppable1のカイリューなどをdroppable2にドラックアンドドロップすると一瞬だけUIが崩れるのですが原因は何だと思いますか？
-// また解決方法もあれば教えてください
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 
 type Pokemon = {
@@ -11,7 +9,7 @@ type Pokemon = {
 const LeftParty = () => {
 
   
-  const [party, setParty] = useState<Array<Pokemon>>([
+  const [party, setParty] = useState<Array<Pokemon >>([
     {
       id:"0",
       name:"カイリュー"
@@ -37,8 +35,17 @@ const LeftParty = () => {
       name:"ハッサム"
     },
   ]);
+  useEffect(() => {
+    // パーティを取得して １番目のポケモンをselectポケモンの中に入れる
+    // バトルに出たポケモンは一時的にパーティから取り除く
+    
+    const droppedPokemon = party.find((pokemon, index) => index === 0 );
+    setSelectPokemon(droppedPokemon)
+    party.shift()
+    
+  },[]);
+  const [selectPokemon, setSelectPokemon] = useState<Pokemon | undefined>();
 
-  const [selectPokemon, setSelectPokemon] = useState<Pokemon | null>(null);
   const handleOnDragEnd = (result:DropResult) => {
     // ドラッグの結果を取得
     const { source, destination } = result;
@@ -55,63 +62,80 @@ const LeftParty = () => {
 
     // ポケモンの並び順を更新
     setParty(newParty);
-    if (destination.droppableId === 'droppable2') {
-      const droppedPokemon = party.find((pokemon, index) => index === source.index);
+    if (destination.droppableId === 'バトル') {
+      const battlePokemon = party.find((pokemon, index) => index === source.index);
+    
       setTimeout(() => {
-        setSelectPokemon(droppedPokemon || null);
+        if (selectPokemon){
+
+          // バトルポケモンをパーティから削除する
+          console.log(battlePokemon?.name,"パーティから削除します")
+          setParty(party.filter((pokeomon)=>(pokeomon != battlePokemon)))
+          setSelectPokemon(battlePokemon);
+          // ででたポケモン(selectPokemon)をパーティに戻す
+          console.log(selectPokemon.name,"をパーティに戻します")         
+          setParty((oldParty ) => [...oldParty, selectPokemon])
+  
+        }
+        
       }, 0);
     }
   };
 
   return (
     <div className='w-1/2'>
-      <DragDropContext onDragEnd={handleOnDragEnd}>
-        <div className='flex justify-around'>
-        <Droppable droppableId='droppable'>
-          {(provided) => (
-            // <div className='flex justify-around'>
-              <div {...provided.droppableProps} ref={provided.innerRef}>
-                {party.map((pokemon, index) => (
-                  <Draggable key={pokemon.id} draggableId={pokemon.id} index={index}>
-                    {(provided) => (
-                      <div
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}
-                      >
-                        {pokemon.name}
+    <DragDropContext onDragEnd={handleOnDragEnd}>
+      <div className='flex justify-around'>
+      <Droppable droppableId='パーティ'>
+        {(provided) => (
+          // <div className='flex justify-around'>
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              {party.map((pokemon, index) => (
+                <Draggable key={pokemon.id} draggableId={pokemon.id} index={index}>
+                  {(provided) => (
+                    <div{...provided.draggableProps} {...provided.dragHandleProps}ref={provided.innerRef} >
+                      <div className='h-20 w-20 md:h-24 md:w-24 my-5  '>
+                        <img className='w-full h-full' src="https://zukan.pokemon.co.jp/zukan-api/up/images/index/89953014f442146518ef45787d9bb0a4.png" alt="" />
+                        <input className='w-full ' type="text" defaultValue={ pokemon.name} />
                       </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              {/* </div> */}
-            </div>
-          )}
-        </Droppable>
-        <Droppable droppableId='droppable2'>
-              {(provided) => (
-                 <div className='bg-gray-300 h-36 w-36 rounded-full flex justify-center items-center'>
-                <div className='' {...provided.droppableProps} ref={provided.innerRef}>
-                 
-                    {provided.placeholder}
-                  {selectPokemon && (
-                    <h1 className='text-xl font-bold'>{selectPokemon.name}</h1>
+                    </div>
                   )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            {/* </div> */}
+          </div>
+        )}
+      </Droppable>
+      <Droppable droppableId='バトル'>
+            {(provided) => (
+            <div className='bg-gray-300 h-24 w-24 md:h-36 md:w-36 rounded-md  flex'>
+              <div className='' {...provided.droppableProps} ref={provided.innerRef}>
+               
                   {provided.placeholder}
-                  
-                </div>
-                </div>
-              )}
-              </Droppable>
-          
+                {selectPokemon && (
+                  <>
+                   <img className='w-full h-full' src="https://zukan.pokemon.co.jp/zukan-api/up/images/index/89953014f442146518ef45787d9bb0a4.png" alt="" />
+                    <h1 className='text-center text-xl font-bold text-white'>{selectPokemon.name}</h1>
+                  </>
+                 
+                )}
+                {provided.placeholder}
+                
+              </div>
+              </div>
+            )}
+            </Droppable>
         
-        </div>
-       
-      </DragDropContext>
-    </div>
+      
+      </div>
+     
+    </DragDropContext>
+  </div>
    
   )
 }
 
 export default LeftParty
+
+
