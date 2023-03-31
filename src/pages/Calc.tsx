@@ -3,7 +3,7 @@ import LeftParty from '../components/Left/LeftParty'
 import RigthParty from '../components/Right/RigthParty'
 
 const Calc = () => {
-  const [isAttack,setIsAttack] = useState(true)
+  const [isAttack,setIsAttack] = useState(false)
 
   return (
     <div>
@@ -12,11 +12,15 @@ const Calc = () => {
  
        
         <div>
-          <div className='w-full hidden md:flex rounded-md   justify-between bg-white p-5'>
+          <div className='w-full hidden md:flex rounded-md justify-between bg-white p-5'>
           <div className='px-2'>
               < h1>自分のポケモン</h1>
               {
-              isAttack? ( <input  placeholder="わざ" className='rounded-full border border-black px-2 ' type="text" / >):(<></>)
+              isAttack? ( 
+              <input  placeholder="わざ" className='rounded-full border border-black px-2 ' type="text" / >
+                ):(
+                  <><button>タイプ変更</button>
+                  </>)
               
               }
 
@@ -25,33 +29,34 @@ const Calc = () => {
                 <>
                 <div className='flex items-center border-b border-teal-500 py-2'>
                     <input className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="HP"/ >
-                    <button className='border border-gray-500 p-2 '>0</button>
-                    <button className='border border-gray-500  p-2'>252</button>
+                    <button className='border border-gray-500 p-2 text-sm'>0</button>
+                    <button className='border border-gray-500  p-2 text-sm'>252</button>
                   </div>
                   <div className='flex items-center border-b border-teal-500 py-2'>
-                    <input className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="防御"/ >
-                    <button className='border border-gray-500 p-2 '>0</button>
-                    <button className='border border-gray-500  p-2'>252</button>
-                  </div>
-                  <div className='flex items-center border-b border-teal-500 py-2'>
-                    <input className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="特防"/ >
-                    <button className='border border-gray-500 p-2 '>0</button>
-                    <button className='border border-gray-500  p-2'>252</button>
-                  </div>
+                    <input className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="防御"/ >
+                    <button className='border border-gray-500 p-2 text-sm'>0</button>
+                    <button className='border border-gray-500  p-2 text-sm'>252</button>
                   
+                  </div>
+                  <div className='flex items-center border-b border-teal-500 py-2'>
+                    <input className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="特防"/ >
+                    <button className='border border-gray-500 p-2 text-sm'>0</button>
+                    <button className='border border-gray-500  p-2 text-sm'>252</button>
+                  
+                  </div>
                 </>):(
                 <> 
                 
                   <div className='flex items-center border-b border-teal-500 py-2'>
-                    <input className="appearance-none bg-transparent border-none  text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="攻撃"/ >
-                    <button className='border border-gray-500 p-2 '>0</button>
-                    <button className='border border-gray-500  p-2'>252</button>
-          
+                    <input className="appearance-none bg-transparent border-none text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="攻撃"/ >
+                    <button className='border border-gray-500 p-2 text-sm '>0</button>
+                    <button className='border border-gray-500  p-2 text-sm'>252</button>
+                    
                   </div>
-                  <div className='flex items-center justify-around border-b border-teal-500 py-2'>
-                    <input className="appearance-none bg-transparent border-none l text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="特殊"/ >
-                    <button className='border border-gray-500 p-2 '>0</button>
-                    <button className='border border-gray-500  p-2'>252</button>
+                  <div className='flex items-center border-b border-teal-500 py-2'>
+                    <input className="appearance-none bg-transparent border-none   text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="特殊"/ >
+                    <button className='border border-gray-500 p-2 text-sm'>0</button>
+                    <button className='border border-gray-500  p-2 text-sm'>252</button>
                     
                   </div></>)
               }
