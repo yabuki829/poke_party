@@ -1,75 +1,151 @@
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
-
-import { Pokemon } from '../../Data/Type/Pokemon';
 import { pokemon_data } from '../../Data/PokemonData';
 
 
 
-const RightParty = () => {
-  const [selectPokemon, setSelectPokemon] = useState<Pokemon>({"id": "3d7719f7-8c38-4e1d-a9d2-e5c4d1d524a7",
-  "name": "ピカチュウ",
-  "number": 25});
-  const [suggests,setSuggest] = useState<Array<Pokemon>>();
-  const [isSuggestion,setIsSuggestion] = useState(false)
-  const [text, setText] = React.useState("");
-  function filterName(e:React.ChangeEvent<HTMLInputElement>){
-    setText(e.target.value)
-    setIsSuggestion(true)
-    const katakana_name = kanaToHira(e.target.value)
+type Pokemon = {
+  id: string;
+  name: string;
+  image:string
+};
 
-    let data = pokemon_data
-    // 10件だけ表示する
-    let filter_poke:Array<Pokemon> = []
-    data.map((poke) =>{
-      const limit = katakana_name.length
-      if (filter_poke.length >= 10){
-        return
-      }
-      if (poke.name.slice(0,limit) == katakana_name){
-        filter_poke.push(poke)
-      }      
-    })
+const RightParty = () => {
+  useEffect(() => {
+    // パーティを取得して １番目のポケモンをselectポケモンの中に入れる
+    // バトルに出たポケモンは一時的にパーティから取り除く
     
-    setSuggest(filter_poke)
+    const droppedPokemon = party.find((pokemon, index) => index === 0 );
+    setSelectPokemon(droppedPokemon)
+    party.shift()
+    
+  },[]);
+
+  function getPokemonData(){
+
   }
-  
-  function kanaToHira(str:string) {
-    return str.replace(/[\u3041-\u3096]/g, function(match) {
-    var chr = match.charCodeAt(0) + 0x60;
-    return String.fromCharCode(chr);
-  });
-  }
-  function handlePokemonSelection(pokemon: Pokemon) {
-    setSelectPokemon(pokemon);
-    setText(pokemon.name)
-    setIsSuggestion(false)
-  }
-  return (
-    <div className='w-1/2'>
-      <div className='flex justify-center '>
-        <div className='bg-gray-300 h-24 w-24 md:h-36 md:w-36 rounded-full '>
-          {selectPokemon && (
-            <>
-              <img className='w-full ' src={"http://localhost:3000/pokemon/"+selectPokemon.number+".png"} alt="" />
-              <input onChange={(e)=>filterName(e)} className='w-full text-center' type="text" value={ text}  />
-              <div className='bg-white '>
-                {isSuggestion ?( 
-                  suggests?.map(pokemon => (
-                  <div key={pokemon.id} className=' hover:bg-gray-300'>
-                      <button onClick={() => handlePokemonSelection(pokemon)} >{pokemon.name}</button>
-                  </div>
-                  
-                ))):(<></>) }
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-      <br />
+  const [party, setParty] = useState<Array<Pokemon>>([
+    {
+      id:"0",
+      name:"マスカーニャ",
+      image:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/908.png"
       
-  </div>
-   
+    },
+    {
+      id:"1",
+      name:"ニンフィア",
+      image:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork//700.png"
+    },
+    {
+      id:"2",
+      name:"ドオー",image:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/980.png"
+
+    },
+    {
+      id:"3",
+      name:"シャンドラー",
+      image:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/609.png"
+    },
+    {
+      id:"4",
+      name:"カバルドン",
+      image:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/450.png"
+    },
+    {
+      id:"5",
+      name:"サーフゴー",
+      image:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1000.png"
+    },
+  ]);
+
+  const [selectPokemon, setSelectPokemon] = useState<Pokemon | undefined>();
+
+  const handleOnDragEnd = (result:DropResult) => {
+    // ドラッグの結果を取得
+    const { source, destination } = result;
+
+    // もしドロップ先が指定されていない場合は処理を終了
+    if (!destination) {
+      return;
+    }
+
+    // ポケモンの並び順を変更
+    const newParty = Array.from(party);
+    const [removed] = newParty.splice(source.index, 1);
+    newParty.splice(destination.index, 0, removed);
+
+    // ポケモンの並び順を更新
+    setParty(newParty);
+    if (destination.droppableId === 'バトル') {
+      const battlePokemon = party.find((pokemon, index) => index === source.index);
+    
+      setTimeout(() => {
+        if (selectPokemon){
+
+          // バトルポケモンをパーティから削除する
+          console.log(battlePokemon?.name,"パーティから削除します")
+          setParty(party.filter((pokeomon)=>(pokeomon != battlePokemon)))
+          setSelectPokemon(battlePokemon);
+          // ででたポケモン(selectPokemon)をパーティに戻す
+          console.log(selectPokemon.name,"をパーティに戻します")         
+          setParty((oldParty ) => [...oldParty, selectPokemon])
+  
+        }
+        
+      }, 0);
+    }
+  };
+  return (
+   <div className='w-1/2'>
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <div className='flex justify-around'>
+            <div>
+            <Droppable droppableId='バトル'>
+              {(provided) => (
+                 <div className='bg-gray-300 h-24 w-24 md:h-36 md:w-36 rounded-full'>
+                <div className='' {...provided.droppableProps} ref={provided.innerRef}>
+                 
+                    {provided.placeholder}
+                  {selectPokemon && (
+                     <>
+                     <img className='w-full h-full' src={selectPokemon.image} alt="" />
+                      <h1 className='text-center text-sm md:text-xl font-bold text-white'>{selectPokemon.name}</h1>
+                    </>
+                  )}
+                  {provided.placeholder}
+                  
+                </div>
+                </div>
+              )}
+              </Droppable>
+              
+              
+            </div>
+             
+            
+          <Droppable droppableId='パーティ'>
+            {(provided) => (
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                  {party.map((pokemon, index) => (
+                    <Draggable key={pokemon.id} draggableId={pokemon.id} index={index}>
+                      {(provided) => (
+                        <div {...provided.draggableProps} {...provided.dragHandleProps}ref={provided.innerRef}>
+                          <div className='h-20 w-20 md:h-24 md:w-24 my-5  '>
+                            <img className='w-full h-full' src={pokemon.image} alt="" />
+                            <input className='w-full text-center' type="text" defaultValue={ pokemon.name} />
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+          </div>
+         
+        </DragDropContext>
+      </div> 
   )
 };
 
