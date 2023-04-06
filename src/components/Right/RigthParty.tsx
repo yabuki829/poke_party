@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
-import { pokemon_name } from '../../Data/PokemonData';
+
+import { Pokemon } from '../../Data/Type/Pokemon';
 
 
 
-type Pokemon = {
-  id: string;
-  name: string;
-  image:string
-};
 
 const RightParty = () => {
   useEffect(() => {
@@ -26,35 +22,9 @@ const RightParty = () => {
   }
   const [party, setParty] = useState<Array<Pokemon>>([
     {
-      id:"0",
-      name:"マスカーニャ",
-      image:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/908.png"
-      
-    },
-    {
-      id:"1",
-      name:"ニンフィア",
-      image:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork//700.png"
-    },
-    {
-      id:"2",
-      name:"ドオー",image:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/980.png"
-
-    },
-    {
-      id:"3",
-      name:"シャンドラー",
-      image:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/609.png"
-    },
-    {
-      id:"4",
-      name:"カバルドン",
-      image:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/450.png"
-    },
-    {
-      id:"5",
-      name:"サーフゴー",
-      image:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1000.png"
+      "id": "4323ffd2-2786-4c43-ada2-d72c315e34f1",
+      "name": "プクリン",
+      "number": 40
     },
   ]);
 
@@ -96,56 +66,26 @@ const RightParty = () => {
     }
   };
   return (
-   <div className='w-1/2'>
-        <DragDropContext onDragEnd={handleOnDragEnd}>
-          <div className='flex justify-around'>
-            <div>
-            <Droppable droppableId='バトル'>
-              {(provided) => (
-                 <div className='bg-gray-300 h-24 w-24 md:h-36 md:w-36 rounded-full'>
-                <div className='' {...provided.droppableProps} ref={provided.innerRef}>
+    <div className='w-1/2'>
+      <div className='flex justify-around'>
+      
+            <div className='bg-gray-300 h-24 w-24 md:h-36 md:w-36 rounded-full  flex'>
+              <div className=''>
+                
+                {selectPokemon && (
+                  <>
+                    <img className='w-full h-full' src={"http://localhost:3000/Assets/pokemon/image/"+selectPokemon.number+"png"} alt="" />
+                    <input className='w-full text-center' type="text" defaultValue={ selectPokemon.name} />
+                  </>
                  
-                    {provided.placeholder}
-                  {selectPokemon && (
-                     <>
-                     <img className='w-full h-full' src={selectPokemon.image} alt="" />
-                      <h1 className='text-center text-sm md:text-xl font-bold text-white'>{selectPokemon.name}</h1>
-                    </>
-                  )}
-                  {provided.placeholder}
-                  
-                </div>
-                </div>
-              )}
-              </Droppable>
-              
-              
-            </div>
-             
-            
-          <Droppable droppableId='パーティ'>
-            {(provided) => (
-                <div {...provided.droppableProps} ref={provided.innerRef}>
-                  {party.map((pokemon, index) => (
-                    <Draggable key={pokemon.id} draggableId={pokemon.id} index={index}>
-                      {(provided) => (
-                        <div {...provided.draggableProps} {...provided.dragHandleProps}ref={provided.innerRef}>
-                          <div className='h-20 w-20 md:h-24 md:w-24 my-5  '>
-                            <img className='w-full h-full' src={pokemon.image} alt="" />
-                            <input className='w-full text-center' type="text" defaultValue={ pokemon.name} />
-                          </div>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
+                )}
               </div>
-            )}
-          </Droppable>
-          </div>
-         
-        </DragDropContext>
-      </div> 
+              </div>
+        
+      
+      </div>
+     
+  </div>
   )
 };
 
