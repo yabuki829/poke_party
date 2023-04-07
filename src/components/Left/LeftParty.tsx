@@ -4,12 +4,11 @@ import { Pokemon } from '../../Data/Type/Pokemon';
 
 
 const LeftParty = () => {  
-  const [selectPokemon, setSelectPokemon] = useState<Pokemon>({"id": "3d7719f7-8c38-4e1d-a9d2-e5c4d1d524a7",
-  "name": "ピカチュウ",
-  "number": 25});
+  const [selectPokemon, setSelectPokemon] = useState<Pokemon>();
   const [suggests,setSuggest] = useState<Array<Pokemon>>();
   const [isSuggestion,setIsSuggestion] = useState(false)
   const [text, setText] = React.useState("");
+  
   function filterName(e:React.ChangeEvent<HTMLInputElement>){
     setText(e.target.value)
     setIsSuggestion(true)
@@ -24,7 +23,7 @@ const LeftParty = () => {
         return
       }
       if (poke.name.slice(0,limit) == katakana_name){
-        filter_poke.push(poke)
+        // filter_poke.push(poke)
       }      
     })
     
@@ -54,7 +53,7 @@ const LeftParty = () => {
                 {isSuggestion ?( 
                   suggests?.map(pokemon => (
                   <div key={pokemon.id} className=' hover:bg-gray-300'>
-                      <button onClick={() => handlePokemonSelection(pokemon)} >{pokemon.name}</button>
+                      <button className='w-full text-left p-1 ml-1 ' onClick={() => handlePokemonSelection(pokemon)} >{pokemon.name}</button>
                   </div>
                   
                 ))):(<></>) }
@@ -71,5 +70,3 @@ const LeftParty = () => {
 }
 
 export default LeftParty
-
-
