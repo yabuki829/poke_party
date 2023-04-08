@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { pokemon_data } from '../../Data/PokemonData';
-import { Pokemon } from '../../Data/Type/Pokemon';
+import { pokemon_data } from '../../data/PokemonData';
+import { Pokemon } from '../../data/Type/Pokemon';
 
 import {  Dispatch, SetStateAction } from "react";
 

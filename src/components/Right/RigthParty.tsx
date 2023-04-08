@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
-import { pokemon_data } from '../../Data/PokemonData';
-import { Pokemon } from '../../Data/Type/Pokemon';
+import { pokemon_data } from '../../data/PokemonData';
+import { Pokemon } from '../../data/Type/Pokemon';
 
 
 type right_pokemon = {
@@ -51,7 +51,7 @@ const RightParty:React.FC<right_pokemon> = ({setPokemon}) => {
   });
   }
   function handlePokemonSelection(pokemon: Pokemon) {
-    alert(pokemon.abilities)
+
     setSelectPokemon(pokemon);
     setText(pokemon.name)
     setIsSuggestion(false)

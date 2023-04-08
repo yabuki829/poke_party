@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Pokemon } from '../Data/Type/Pokemon';
+import { Pokemon } from '../../data/Type/Pokemon';
 import CalcCard from './CalcCard';
-import change from "../Assets/change.png"
+import change from "../../Assets/change.png"
 
 type CalcData = {
   pokemon_A: Pokemon

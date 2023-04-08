@@ -1,14 +1,50 @@
-import React from 'react'
-import { Pokemon } from '../Data/Type/Pokemon'
-import shield from "../Assets/pokemon/shield.png"
-import sword from "../Assets/pokemon/sword.png"
+import React, { useState } from 'react'
+import { Pokemon,PokemonMove } from '../../data/Type/Pokemon'
+import shield from "../../Assets/pokemon/shield.png"
+import sword from "../../Assets/pokemon/sword.png"
 type CalcCard = {
   isAttack:boolean
   pokemon: Pokemon
 }
 const CalcCard:React.FC<CalcCard> = ({isAttack,pokemon}) => {
-  
+  const [suggests,setSuggest] = useState<Array<PokemonMove>>([]);
+  const [isSuggestion,setIsSuggestion] = useState(false)
+  const [text, setText] = useState<string|undefined>("");
+  const [isChecked, setIsChecked] = useState(false);
 
+  const handleToggle = () => {
+    setIsChecked(!isChecked);
+  };
+  function filterName(e:React.ChangeEvent<HTMLInputElement>){
+    setText(e.target.value)
+    setIsSuggestion(true)
+    const katakana_name = kanaToHira(e.target.value)
+
+    // 10件だけ表示する
+    let filter_moves:Array<PokemonMove> = []
+    pokemon.moves.map((move) =>{
+      const limit = katakana_name.length
+      if (filter_moves.length > 5){
+        return
+      }
+      if (kanaToHira(move.name.slice(0,limit)) == katakana_name){
+        filter_moves.push(move)
+      }      
+    })
+    setSuggest(filter_moves)
+  }
+  
+  function kanaToHira(str:string) {
+    return str.replace(/[\u3041-\u3096]/g, function(match) {
+    var chr = match.charCodeAt(0) + 0x60;
+    return String.fromCharCode(chr);
+  });
+  }
+  function handleMoveSelection(move:PokemonMove){
+    setText(move.name)
+    setIsSuggestion(false)
+    
+  }
   return (
     <div className='px-5 p-3 bg-white rounded-md mx-1 '>
       <div className='flex items-center justify-between'>
@@ -28,7 +64,27 @@ const CalcCard:React.FC<CalcCard> = ({isAttack,pokemon}) => {
     
     {
     isAttack? ( 
-    <input  placeholder="わざ" className='rounded-full border border-black px-2 ' type="text" / >
+      <div className='flex items-center'>
+        <div className='relative '>
+          <input onChange={(e)=>filterName(e)} value={text} className='w-full rounded-full border border-black px-2 '  placeholder="わざ"  type="text" / >
+          <div className=' bg-white  absolute w-full shadow-2xl bg-gray-300'>
+            {isSuggestion ?( 
+              suggests?.map(move => (
+                <div key={move.name} className=' hover:bg-gray-300 '>
+                  <button className='w-full text-left p-1 ml-1 ' onClick={() => handleMoveSelection(move)} >{move.name}</button>
+                  <hr />
+                </div>
+                            
+            ))):(<></>) }
+          </div>
+        </div>
+        <label>
+      <input type="checkbox" checked={isChecked} onChange={handleToggle}/>
+      <span></span>
+    </label>
+      </div>
+      
+    
       ):(
         <><button>タイプ変更</button>
         </>)
