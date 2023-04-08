@@ -2,8 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { pokemon_data } from '../../Data/PokemonData';
 import { Pokemon } from '../../Data/Type/Pokemon';
 
+import {  Dispatch, SetStateAction } from "react";
 
-const LeftParty = () => {  
+
+type left_pokemon = {
+  setPokemon : (pokemon: Pokemon) => void
+}
+const LeftParty:React.FC<left_pokemon> = ({setPokemon}) => {  
   const [selectPokemon, setSelectPokemon] = useState<Pokemon>();
   const [suggests,setSuggest] = useState<Array<Pokemon>>();
   const [isSuggestion,setIsSuggestion] = useState(false)

@@ -4,9 +4,11 @@ import { pokemon_data } from '../../Data/PokemonData';
 import { Pokemon } from '../../Data/Type/Pokemon';
 
 
+type right_pokemon = {
+  setPokemon : (pokemon: Pokemon) => void
+}
 
-
-const RightParty = () => {
+const RightParty:React.FC<right_pokemon> = ({setPokemon}) => {
   const [suggests,setSuggest] = useState<Array<Pokemon>>();
   const [isSuggestion,setIsSuggestion] = useState(false)
   const [text, setText] = useState<string|undefined>("");
@@ -53,6 +55,7 @@ const RightParty = () => {
     setSelectPokemon(pokemon);
     setText(pokemon.name)
     setIsSuggestion(false)
+    setPokemon(pokemon)
   }
 
 
@@ -84,7 +87,7 @@ const RightParty = () => {
           console.log(selectPokemon.name,"をパーティに戻します")         
           setParty((oldParty ) => [...oldParty, selectPokemon])
           setText(battlePokemon?.name)
-
+          setPokemon(battlePokemon|| pokemon_data[20])
         }
         
       }, 0);
@@ -131,8 +134,8 @@ const RightParty = () => {
                   {party.map((pokemon, index) => (
                     <Draggable key={pokemon.id} draggableId={pokemon.id} index={index}>
                       {(provided) => (
-                        <div className=' bg-white rounded-full' {...provided.draggableProps} {...provided.dragHandleProps}ref={provided.innerRef}>
-                          <div className='h-20 w-20 md:h-24 md:w-24 my-5 '>
+                        <div className=' ' {...provided.draggableProps} {...provided.dragHandleProps}ref={provided.innerRef}>
+                          <div className='bg-white rounded-full h-20 w-20 md:h-24 md:w-24 my-5 '>
                           <img className='w-full ' src={"http://localhost:3000/pokemon/"+pokemon.number+".png"} alt="" />
                           
                             <h1 className='w-full text-center'>{ pokemon.name}</h1>

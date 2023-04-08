@@ -6,7 +6,7 @@ import Calc from './pages/Calc';
 function App() {
   return (
     <Router>
-      <div className='bg-sky-600 h-screen'>
+      <div className='bg-sky-600 '>
         <Header/>
         <Routes>
           <Route path='/' element={<Calc/>}></Route>
