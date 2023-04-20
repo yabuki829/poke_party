@@ -1,26 +1,43 @@
-import React, { useState } from 'react'
-import { Pokemon } from '../../data/Type/Pokemon';
+import React, { useEffect, useState } from 'react'
+import { Pokemon, PokemonStatus,PokemonMove } from '../../data/Type/Pokemon';
 import CalcCard from './CalcCard';
 import change from "../../Assets/change.png"
 
 type CalcData = {
-  pokemon_A: Pokemon
-  pokemon_B: Pokemon
+  pokemon_left: Pokemon
+  pokemon_right: Pokemon
+
+  // 左のポケモン
+  setLeftItems: (item: string ) => void
+  setLeftStatus: (status: PokemonStatus ) => void
+  setLeftMove: (move: PokemonMove ) => void
+  leftMove:PokemonMove|undefined
+  // 右のポケモン
+  setRightItems: (item: string ) => void
+  setRightStatus: (status: PokemonStatus ) => void
+  setRightMove: (move: PokemonMove ) => void
+  rightMove:PokemonMove|undefined
+  
+  
 }
 const Calculator = (data:CalcData) => {
-  const {pokemon_A,pokemon_B } = data
+  const {pokemon_left,setLeftItems,setLeftMove,setLeftStatus ,leftMove} = data
+  const {pokemon_right,setRightItems,setRightMove,setRightStatus,rightMove} = data
+  // true左側が攻撃
   const [isAttack,setIsAttack] = useState(true)
   function tapChangeIsAttack(){
     setIsAttack((pre)=> pre = !pre)
-    // alert(isAttack)
   }
+
+
+
   return (
     <div>
       {/* <button >変更</button> */}
         <div className='w-full hidden md:flex  justify-between  '>
-          <CalcCard isAttack={isAttack} pokemon={pokemon_A}/>
-          <button onClick={tapChangeIsAttack} className='h-12 w-12'><img src={change} alt="" /></button>
-          <CalcCard isAttack={!isAttack} pokemon={pokemon_B}/>
+          <CalcCard isAttack={isAttack} pokemon={pokemon_left} setItems={setLeftItems} setStatus={setLeftStatus} setMove={setLeftMove} attckerMove={rightMove} />
+          <button onClick={tapChangeIsAttack} className='h-12 w-12 p-2'><img src={change} alt="" /></button>
+          <CalcCard isAttack={!isAttack} pokemon={pokemon_right} setStatus={setRightStatus} setMove={setRightMove} setItems={setRightItems} attckerMove={leftMove} />
         </div>
           <div className='bg-white my-4  p-2 rounded-md'>
             <h1 className='text-xl font-bold p-2'>環境</h1>

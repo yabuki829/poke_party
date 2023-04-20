@@ -1,5 +1,14 @@
 import React from 'react'
 
+
+
+type Result = {
+  defenderHP : number
+  attckderA : number
+  
+}
+
+
 const Result = () => {
   let maxDamage = 50
   let minDamage = 40

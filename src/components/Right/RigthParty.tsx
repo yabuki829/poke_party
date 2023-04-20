@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from "react-beautiful-dnd";
 import { pokemon_data } from '../../data/PokemonData';
-import { Pokemon } from '../../data/Type/Pokemon';
+import { Pokemon, PokemonMove, PokemonStatus } from '../../data/Type/Pokemon';
 
 
 type right_pokemon = {
@@ -138,7 +138,7 @@ const RightParty:React.FC<right_pokemon> = ({setPokemon}) => {
                           <div className='bg-white rounded-full h-20 w-20 md:h-24 md:w-24 my-5 '>
                           <img className='w-full ' src={"http://localhost:3000/pokemon/"+pokemon.number+".png"} alt="" />
                           
-                            <h1 className='w-full text-center'>{ pokemon.name}</h1>
+                          <h1 className='w-full text-center text-white font-bold'>{ pokemon.name}</h1>
                           </div>
                         </div>
                       )}
