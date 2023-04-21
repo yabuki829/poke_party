@@ -3,32 +3,38 @@ import React from 'react'
 
 
 type Result = {
-  defenderHP : number
-  attckderA : number
-  
+  maxDamage : number
+  minDamage : number
+  HP:number
 }
 
 
-const Result = () => {
-  let maxDamage = 50
-  let minDamage = 40
-  let hp = 100 
+const Result:React.FC<Result> = ({maxDamage,minDamage,HP }) => {
  
-  let compatibility = 2
+ 
 
   function kakutei(){
     // 確定数と乱数の数が同じであれば確定数を表示する
+    if (Math.ceil(HP / maxDamage )== 1) {
+      if (Math.ceil(HP / minDamage )== 1){
+        return "確定1発"
+      }
+      return "乱数1発"
+    }
+    //  Math.ceil(HP / maxDamage)
+    return `確定${Math.ceil(HP/minDamage)}発`
   }
   return (
     <>
       <div className='w-screen bg-gray-100 h-32 sticky absolute bottom-0 '>
         <h1 className='bg-blue-300 px-2'>計算結果</h1> 
+        最大ダメージ{maxDamage},最小ダメージ{minDamage}, 最大HP{HP}
         <div className="w-full">
 
           <div className="w-full">
             <div className="flex justify-start mr-16 font-bold">
               <div className="ml-2">
-                <p>{minDamage}~{maxDamage}({minDamage / hp * 100 }% ~ {maxDamage / hp * 100 }%) 乱数{ Math.ceil(hp / maxDamage)}発 </p>
+                <p>{minDamage}~{maxDamage}({ Math.floor(minDamage / HP * 100 )}% ~ {Math.floor(maxDamage / HP * 100) }%) {kakutei()} </p>
               </div>
      
             </div>
@@ -46,17 +52,17 @@ const Result = () => {
               {/* 最大ダメージ */}
               <div
                 className={`${
-                  hp-maxDamage > 0.8
+                  HP-maxDamage > 0.8
                     ? "bg-green-400"
-                    :  hp - maxDamage > 0.5
+                    :  HP - maxDamage > 0.5
                     ? "bg-green-400"
                     : "bg-green-400"
                 } text-xs font-medium text-green-100 text-center p-0.5 leading-none rounded-full h-4 absolute`}
                 style={{
                   width: `${
-                    minDamage / hp > 1
+                    minDamage / HP > 1
                       ? 0
-                      : 100 - (minDamage / hp) * 100
+                      : 100 - (minDamage / HP) * 100
                   }%`,
                   transition: "width 0.3s ease-in-out",
                 }}
@@ -65,17 +71,17 @@ const Result = () => {
               {/*  最小ダメージ*/}
               <div
                 className={`${
-                  maxDamage / hp > 0.8
+                  maxDamage / HP > 0.8
                     ? "bg-green-700"
-                    : maxDamage / hp > 0.5
+                    : maxDamage / HP > 0.5
                     ? "bg-amber-500"
                     : "bg-green-600"
                 } text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full h-4 absolute`}
                 style={{
                   width: `${
-                    maxDamage / hp > 1
+                    maxDamage / HP > 1
                       ? 0
-                      : 100 - (maxDamage / hp) * 100
+                      : 100 - (maxDamage / HP) * 100
                   }%`,
                   transition: "width 0.3s ease-in-out",
                 }}

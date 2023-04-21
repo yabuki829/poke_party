@@ -6,7 +6,7 @@ import { pokemon_data } from '../data/PokemonData';
 import { Pokemon, PokemonMove, PokemonStatus } from '../data/Type/Pokemon';
 import Result from '../components/Calc/Result';
 const Calc = () => {
-  
+ 
   // 右側が攻撃側かどうか
   const [isAttack,setIsAttack] = useState(false)
   // 右側のポケモン
@@ -42,8 +42,42 @@ const Calc = () => {
   // 左側の素早さランク
   // TODO: 素早さが早い可能性が高い方の剣や盾のアイコンの下をunderlineをひく
   
-  // ダメージ
-  const [damage, setDamage] = useState(0);
+
+
+  // ダメージ ＝ { ( 50 × 2/5 ＋ 2 ) × 威力 × 攻撃/防御 } ×1/50＋2
+  // ダメージ = (((レベル×2/5+2)×威力×A/D)/50+2)×範囲補正×おやこあい補正×天気補正×急所補正×乱数補正×タイプ一致補正×相性補正×やけど補正×M×Mprotect
+  function calc(){
+    // 右側が攻撃
+    
+    if (!isAttack){
+      console.log("計算します")
+      let power = selectMove?.power ? selectMove.power : 1
+      let A = leftStatus?.a ? leftStatus.a : 1
+      let B = rightStatus?.b ? rightStatus.b : 1
+      setHP(rightStatus?.h)
+      console.log("HP",rightStatus?.h)
+      // 基本ダメージ
+      let damege = Math.floor(((50 * 2 / 5 + 2) * power * A / B ) * 1 / 50 + 2)
+      // タイプ一致補正
+      let type_hosei = 1
+      if  (selectMove?.type?(selectMove?.type):"" in leftPokemon.types){
+        type_hosei = 1.5
+      }
+      // 相性補正 0.25 0.5 1.0 2.0 4.0
+      
+      //乱数補正 0.85 * 1
+      setMinDamage(Math.floor(damege*0.85*type_hosei))
+      setMaxDamage(Math.floor(damege*1.0*type_hosei))
+      alert(damege*1.0*type_hosei)
+    }
+    else {
+      setHP(rightStatus?.h)
+    }
+
+  }
+
+
+
   // 最低ダメージ
   const [minDamage, setMinDamage] = useState(0);
   // 最高ダメージ
@@ -54,10 +88,15 @@ const Calc = () => {
   const [nature,setNature] = useState()
   // ブーストエナジーの使用
   const [AttackboosterEnergy, setBoosterEnergy] = useState(false)
-
+  // まもる側のHP
+  const [HP,setHP] = useState<number|undefined>(100)
 
   const [isPhysical_left,setIsPhysical] = useState(false)
-
+  useEffect(() => {
+    
+    calc()
+    
+  },[selectMove,leftStatus,rightStatus]) 
   return (
     <div>
        
@@ -70,7 +109,7 @@ const Calc = () => {
         <RigthParty setPokemon={setRightPokemon}/>
         
       </div>
-      <Result/>
+      <Result maxDamage={maxDamage} minDamage={minDamage} HP={HP ? HP :1}/>
        
      
     </div>
