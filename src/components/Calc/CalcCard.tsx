@@ -36,6 +36,8 @@ const CalcCard:React.FC<CalcCard> = ({isAttack,pokemon,setItems,setMove,setStatu
   let [seikaku,setSeikaku] = useState(1.0)
   const [isPhysicalMove,setIsPhysicalMove] = useState(false)
   useEffect(() => {
+
+    // デフォルトの技を設定する
     if (attckerMove?.category == "物理技"){
       setIsPhysicalMove(true)
     }
